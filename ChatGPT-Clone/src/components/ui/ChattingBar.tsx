@@ -44,7 +44,7 @@ const ChattingBar = () => {
 
 export default ChattingBar;
 
-// ✅ 아래는 ChattingBar 내부 레이아웃용 스타일만 남김
+// 아래는 ChattingBar 내부 레이아웃용 스타일만 남김
 
 const Container = styled.div`
   display: flex;

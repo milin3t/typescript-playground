@@ -34,7 +34,6 @@ export const ButtonText = styled.span`
 `;
 
 // ********* Header Buttons
-// temporary status button
 export const IconButton = styled.button`
   background: none;
   border: none;
@@ -51,6 +50,7 @@ export const IconButton = styled.button`
 `;
 
 // 임시 버튼 (temporary chat)
+// temporary status button
 export const StatusButton = styled.button`
   padding: 6px 12px;
   background-color: transparent;
