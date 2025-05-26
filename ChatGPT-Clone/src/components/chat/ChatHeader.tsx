@@ -1,20 +1,17 @@
 // src/components/header/Header.tsx
 import styled from "styled-components";
-import { ImageButton, StatusButton, AvatarButton } from "../ui/Button";
+import { SidebarButtons, StatusButton, AvatarButton } from "../ui/Button";
+import { useSidebar } from "../../contexts/SidebarContext";
 
-const Header = () => {
+const ChatHeader = () => {
+  const { isOpen, toggle } = useSidebar();
+
   return (
     <Container>
       <Left>
-        <ImageButton>
-          <img src="/icons/sidebar.svg" alt="Sidebar" />
-        </ImageButton>
-        <ImageButton>
-          <img src="/icons/newchat.svg" alt="New Chat" />
-        </ImageButton>
+        {!isOpen && <SidebarButtons toggle={toggle} />}{" "}
         <Title>JJapGPT &gt;</Title>
       </Left>
-
       <Right>
         <StatusButton>Temporary</StatusButton>
         <AvatarButton>👤</AvatarButton>
@@ -23,17 +20,14 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default ChatHeader;
 
 // 레이아웃 전용 스타일
 const Container = styled.header`
-  position: fixed;
   top: 0;
   left: 0;
-  z-index: 1000;
   width: 100%;
   height: 56px;
-  background-color: #1e1e1e;
   border-bottom: 1px solid #333;
   display: flex;
   justify-content: space-between;

@@ -1,9 +1,20 @@
 import { useState } from "react";
 import styled from "styled-components";
-import { ActionButton, PrimaryButton, ButtonText } from "../ui/Button"; // ✅ 버튼 컴포넌트 가져오기
+import { ActionButton, PrimaryButton, ButtonText } from "../ui/Button";
+import { useSidebar } from "../../contexts/SidebarContext";
 
-const ChattingBar = () => {
+type ChattingBarProps = {
+  onSend: (text: string) => void;
+};
+
+const ChattingBar = ({ onSend }: ChattingBarProps) => {
   const [inputValue, setInputValue] = useState("");
+  const { isOpen } = useSidebar();
+
+  const handleSend = () => {
+    onSend(inputValue);
+    setInputValue("");
+  };
 
   return (
     <Container>
@@ -11,30 +22,33 @@ const ChattingBar = () => {
         placeholder="Ask anything"
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") handleSend();
+        }}
       />
 
       <BottomRow>
         <LeftButtons>
           <ActionButton>+</ActionButton>
           <ActionButton>
-            🌎 <ButtonText>Search</ButtonText>
+            🌎 <ButtonText $sidebarOpen={isOpen}>Search</ButtonText>
           </ActionButton>
           <ActionButton>
-            💡 <ButtonText>Reason</ButtonText>
+            💡 <ButtonText $sidebarOpen={isOpen}>Reason</ButtonText>
           </ActionButton>
           <ActionButton>
-            🔭 <ButtonText>Deep research</ButtonText>
+            🔭 <ButtonText $sidebarOpen={isOpen}>Deep research</ButtonText>
           </ActionButton>
           <ActionButton>
-            🎨 <ButtonText>Create image</ButtonText>
+            🎨 <ButtonText $sidebarOpen={isOpen}>Create image</ButtonText>
           </ActionButton>
           <ActionButton>...</ActionButton>
         </LeftButtons>
 
         <RightButtons>
           <ActionButton>🎙️</ActionButton>
-          <PrimaryButton>
-            {inputValue.trim() === "" ? "📊" : "⬆️"}
+          <PrimaryButton onClick={handleSend}>
+            {inputValue === "" ? "📊" : "⬆️"}
           </PrimaryButton>
         </RightButtons>
       </BottomRow>
@@ -44,8 +58,7 @@ const ChattingBar = () => {
 
 export default ChattingBar;
 
-// 아래는 ChattingBar 내부 레이아웃용 스타일만 남김
-
+// 스타일 정의
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -61,11 +74,6 @@ const Container = styled.div`
     max-width: 100%;
     padding: 16px;
     border-radius: 24px;
-  }
-
-  @media (max-width: 480px) {
-    padding: 12px;
-    border-radius: 16px;
   }
 `;
 
@@ -84,11 +92,6 @@ const BottomRow = styled.div`
   justify-content: space-between;
   margin-top: 16px;
   flex-wrap: wrap;
-
-  @media (max-width: 480px) {
-    justify-content: center;
-    gap: 12px;
-  }
 `;
 
 const LeftButtons = styled.div`

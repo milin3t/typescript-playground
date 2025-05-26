@@ -1,12 +1,14 @@
+// App.tsx
 import GlobalStyle from "./styles/GlobalStyle";
-import ChatPage from "./pages/ChatPage";
+import MainPage from "./pages/MainPage";
+import { SidebarProvider } from "./contexts/SidebarContext";
 
 function App() {
   return (
-    <>
+    <SidebarProvider>
       <GlobalStyle />
-      <ChatPage />
-    </>
+      <MainPage />
+    </SidebarProvider>
   );
 }
 
