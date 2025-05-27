@@ -7,7 +7,7 @@ export const generateGeminiTitle = async (
 
   try {
     const response = await generateGeminiResponse(prompt);
-    return response.replace(/\n/g, "").trim().slice(0, 10);
+    return response.replace(/\n/g, "").trim().slice(0, 15);
   } catch (err) {
     console.warn("Gemini 제목 요약 실패, fallback 사용:", err);
     return userMessage.slice(0, 10);
