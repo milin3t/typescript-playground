@@ -1,36 +1,66 @@
 import styled from "styled-components";
+import useChatToTop from "../../hooks/useChatToTop";
+import { useEffect } from "react";
 
-type ChatMessagesProps = {
-  messages: { sender: "user" | "ai"; text: string }[];
+type MessageType = {
+  sender: "user" | "ai";
+  text: string;
 };
 
-const ChatMessages = ({ messages }: ChatMessagesProps) => {
+type ChatMessagesProps = {
+  messages: MessageType[];
+  lastUserMessageRef: React.RefObject<null | HTMLDivElement>;
+};
+
+const ChatMessages = ({ messages, lastUserMessageRef }: ChatMessagesProps) => {
+  const paddingBottom = useChatToTop(450);
+
+  useEffect(() => {
+    if (
+      messages.length > 0 &&
+      messages[messages.length - 1].sender === "user"
+    ) {
+      lastUserMessageRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+  }, [messages, lastUserMessageRef]);
+
   return (
-    <Wrapper>
-      {messages.map((msg, index) => (
-        <Message key={index} $sender={msg.sender}>
-          {msg.text}
-        </Message>
-      ))}
+    <Wrapper $paddingBottom={paddingBottom}>
+      {messages.map((msg, index) => {
+        const isLastUser =
+          index === messages.length - 1 && msg.sender === "user";
+        return (
+          <Message
+            key={index}
+            ref={isLastUser ? lastUserMessageRef : null}
+            $sender={msg.sender}
+          >
+            {msg.text}
+          </Message>
+        );
+      })}
     </Wrapper>
   );
 };
 
 export default ChatMessages;
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ $paddingBottom: string }>`
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  padding: 24px 0;
+  gap: 16px;
   width: 100%;
+  padding-bottom: ${({ $paddingBottom }) => $paddingBottom};
 `;
 
 const Message = styled.div<{ $sender: "user" | "ai" }>`
   background-color: ${({ $sender }) =>
     $sender === "user" ? "#555" : "#3a3a3c"};
   color: white;
-  padding: 16px 16px;
+  padding: 16px;
   border-radius: 30px;
   align-self: ${({ $sender }) =>
     $sender === "user" ? "flex-end" : "flex-start"};

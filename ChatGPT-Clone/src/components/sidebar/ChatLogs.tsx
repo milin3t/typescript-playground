@@ -1,20 +1,35 @@
-// ChatLogs.tsx
 import styled from "styled-components";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+type ChatLog = {
+  id: string;
+  title: string;
+};
 
 const ChatLogs = () => {
-  const chats = [
-    "5줄 시 만들기",
-    "이미지 생성 요청",
-    "Help with Calculation",
-    "무한스크롤 차단 프로그램",
-  ];
+  const [logs, setLogs] = useState<ChatLog[]>([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const stored = localStorage.getItem("chatLogs");
+    if (stored) {
+      setLogs(JSON.parse(stored));
+    }
+  }, []);
+
+  const handleClick = (id: string) => {
+    navigate(`/chat/${id}`);
+  };
 
   return (
     <Section>
       <Title>Today</Title>
       <List>
-        {chats.map((text, i) => (
-          <Item key={i}>{text}</Item>
+        {logs.map((log) => (
+          <Item key={log.id} onClick={() => handleClick(log.id)}>
+            {log.title}
+          </Item>
         ))}
       </List>
     </Section>
