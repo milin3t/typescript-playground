@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 type ChatLog = {
@@ -7,16 +6,14 @@ type ChatLog = {
   title: string;
 };
 
-const ChatLogs = () => {
-  const [logs, setLogs] = useState<ChatLog[]>([]);
+type ChatLogsProps = {
+  chatLogs: ChatLog[];
+};
+
+const ChatLogs = ({ chatLogs }: ChatLogsProps) => {
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const stored = localStorage.getItem("chatLogs");
-    if (stored) {
-      setLogs(JSON.parse(stored));
-    }
-  }, []);
+  const sortedLogs = [...chatLogs].sort((a, b) => Number(b.id) - Number(a.id));
 
   const handleClick = (id: string) => {
     navigate(`/chat/${id}`);
@@ -26,7 +23,7 @@ const ChatLogs = () => {
     <Section>
       <Title>Today</Title>
       <List>
-        {logs.map((log) => (
+        {sortedLogs.map((log) => (
           <Item key={log.id} onClick={() => handleClick(log.id)}>
             {log.title}
           </Item>

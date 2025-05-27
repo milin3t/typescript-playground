@@ -1,18 +1,24 @@
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 
 // props type 정의
 interface SidebarButtonsProps {
   toggle: () => void;
 }
 
-// Sidebar & NewChat 버튼 묶음
 export const SidebarButtons = ({ toggle }: SidebarButtonsProps) => {
+  const navigate = useNavigate();
+
+  const handleNewChat = () => {
+    navigate("/");
+  };
+
   return (
     <>
       <ImageButton onClick={toggle}>
         <img src="/icons/sidebar.svg" alt="Sidebar" />
       </ImageButton>
-      <ImageButton>
+      <ImageButton onClick={handleNewChat}>
         <img src="/icons/newchat.svg" alt="New Chat" />
       </ImageButton>
     </>

@@ -2,16 +2,22 @@
 import styled from "styled-components";
 import { ImageButton } from "../ui/Button";
 import { useSidebar } from "../../contexts/SidebarContext";
+import { useNavigate } from "react-router-dom";
 
 const SideHeader = () => {
   const { toggle } = useSidebar();
+  const navigate = useNavigate();
+
+  const handleNewChat = () => {
+    navigate("/");
+  };
 
   return (
     <Header>
       <ImageButton onClick={toggle}>
         <img src="/icons/sidebar.svg" alt="Sidebar" />
       </ImageButton>
-      <ImageButton>
+      <ImageButton onClick={handleNewChat}>
         <img src="/icons/newchat.svg" alt="New Chat" />
       </ImageButton>
     </Header>

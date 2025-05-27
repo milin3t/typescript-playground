@@ -7,6 +7,11 @@ import ChatMessages from "./ChatMessages";
 import ChattingBar from "./ChattingBar";
 import ChatHeader from "./ChatHeader";
 import { useSidebar } from "../../contexts/SidebarContext";
+import { generateGeminiTitle } from "../../utils/titleGenerator";
+
+type ChatPanelProps = {
+  setChatLogs: (logs: ChatLog[]) => void;
+};
 
 type MessageType = {
   sender: "user" | "ai";
@@ -19,7 +24,7 @@ type ChatLog = {
   messages: MessageType[];
 };
 
-const ChatPanel = () => {
+const ChatPanel = ({ setChatLogs }: ChatPanelProps) => {
   const { isOpen } = useSidebar();
   const navigate = useNavigate();
   const { id } = useParams();
@@ -32,10 +37,10 @@ const ChatPanel = () => {
   const lastUserMessageRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    console.log("[복원] useEffect 실행됨 - id:", id);
+    setMessages([]);
 
     if (!id) {
-      console.log("[복원] id 없음 → 복원 중단");
+      setChatId(null);
       setIsRestoring(false);
       return;
     }
@@ -43,21 +48,17 @@ const ChatPanel = () => {
     const savedLogs: ChatLog[] = JSON.parse(
       localStorage.getItem("chatLogs") || "[]"
     );
-    console.log("[복원] chatLogs:", savedLogs);
 
     const found = savedLogs.find((log) => log.id.toString() === id);
-    console.log("[복원] 찾은 로그:", found);
 
     if (found) {
       setMessages(found.messages);
       setChatId(id);
-      console.log("[복원] 메시지 세팅 완료");
     } else {
       console.log("[복원] log 못 찾음 - 조건 불일치");
     }
 
     setIsRestoring(false);
-    console.log("[복원] 복원 완료 → isRestoring false로 설정");
   }, [id]);
 
   useEffect(() => {
@@ -82,12 +83,21 @@ const ChatPanel = () => {
       setChatId(newId);
       navigate(`/chat/${newId}`);
 
-      const title = text.slice(0, 15);
+      const generatedTitle = await generateGeminiTitle(text);
+      const newLog: ChatLog = {
+        id: newId,
+        title: generatedTitle,
+        messages: [userMessage],
+      };
+
       const prevLogs: ChatLog[] = JSON.parse(
         localStorage.getItem("chatLogs") || "[]"
       );
-      const newLog: ChatLog = { id: newId, title, messages: [userMessage] };
-      localStorage.setItem("chatLogs", JSON.stringify([...prevLogs, newLog]));
+      const updatedLogs = [...prevLogs, newLog];
+
+      localStorage.setItem("chatLogs", JSON.stringify(updatedLogs));
+
+      setChatLogs(updatedLogs);
     }
 
     setMessages((prev) => [...prev, userMessage]);

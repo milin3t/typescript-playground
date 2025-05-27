@@ -9,8 +9,7 @@ const ChatHeader = () => {
   return (
     <Container>
       <Left>
-        {!isOpen && <SidebarButtons toggle={toggle} />}{" "}
-        <Title>JJapGPT &gt;</Title>
+        {!isOpen && <SidebarButtons toggle={toggle} />} <Title>JJapGPT</Title>
       </Left>
       <Right>
         <StatusButton>Temporary</StatusButton>

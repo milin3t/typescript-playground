@@ -4,8 +4,13 @@ import GPTPlugins from "./GPTPlugins";
 import ChatLogs from "./ChatLogs";
 import SideFooter from "./SideFooter";
 import { useSidebar } from "../../contexts/SidebarContext";
+import { ChatLog } from "../../pages/MainPage"; // ChatLog 타입 import
 
-const Sidebar = () => {
+type Props = {
+  chatLogs: ChatLog[];
+};
+
+const Sidebar = ({ chatLogs }: Props) => {
   const { isOpen, toggle } = useSidebar();
 
   return (
@@ -17,7 +22,7 @@ const Sidebar = () => {
         <ScrollArea>
           <GPTPlugins />
           <ChatLogsContainer>
-            <ChatLogs />
+            <ChatLogs chatLogs={chatLogs} />
           </ChatLogsContainer>
         </ScrollArea>
 
